@@ -2,11 +2,13 @@ require('dotenv').config()
 const express = require("express")
 const cors = require("cors")
 require ('./database/dbConnection')
+const router = require('./routes/router')
 
 const hOutServer = express()
 
 hOutServer.use(cors())
 hOutServer.use(express.json())
+hOutServer.use(router)
 
 const PORT = 3000 || process.env.PORT
 
