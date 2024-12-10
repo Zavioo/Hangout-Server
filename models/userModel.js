@@ -19,7 +19,16 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true
+    },
+    profilePic:{
+        type:String
+
+    },
+    about:{
+        type:String,
+        default:"About You"
     }
+
 })  
 
 const users = mongoose.model("users",userSchema)
