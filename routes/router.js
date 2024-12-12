@@ -3,6 +3,7 @@ const express = require('express')
 const userController = require("../controllers/userController")
 const jwtMiddleware = require('../middlerwears/jwtMiddleware')
 const multerMiddleware = require('../middlerwears/multerMiddleware')
+const PostController  = require('../controllers/postController')
 
 
 const router = new express.Router()
@@ -15,5 +16,8 @@ router.post('/login', userController.loginController)
 
 // profile updation : http://localhost:3000/edit-user
 router.put('/edit-user', jwtMiddleware, multerMiddleware.single('profilePic'), userController.editUserController)
+
+ //To Add post :http://localhost:3000/add-post
+ router.post('/add-post',jwtMiddleware,multerMiddleware.single('media'),PostController.addPostController)
 
 module.exports = router 
