@@ -9,6 +9,7 @@ const hOutServer = express()
 hOutServer.use(cors())
 hOutServer.use(express.json())
 hOutServer.use(router)
+hOutServer.use('/uploads',express.static('./uploads'))
 
 const PORT = 3000 || process.env.PORT
 
