@@ -22,3 +22,16 @@ exports.addPostController = async (req, res) => {
 
     }
 }
+
+// to get all posts 
+exports.allPostController = async (req, res) => {
+    console.log("Inside getAllPostController");
+    try {
+        const allHomePosts = await posts.find()
+        res.status(200).json(allHomePosts)
+        console.log(allHomePosts);
+        
+    } catch (err) {
+        res.status(401).json(err)
+    }
+}

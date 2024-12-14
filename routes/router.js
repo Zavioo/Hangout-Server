@@ -20,4 +20,7 @@ router.put('/edit-user', jwtMiddleware, multerMiddleware.single('profilePic'), u
  //To Add post :http://localhost:3000/add-post
  router.post('/add-post',jwtMiddleware,multerMiddleware.single('media'),PostController.addPostController)
 
+ // to get all Posts: http://localhost:3000/all-posts
+ router.get('/all-posts',PostController.allPostController)
+
 module.exports = router 
