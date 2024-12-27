@@ -34,3 +34,23 @@ exports.allPostController = async (req, res) => {
         res.status(401).json(err);
     }
 };
+
+//edit and update post
+exports.editPostController = async (req, res) => {
+    console.log("Inside editPostController");
+    const id = req.params.id
+    const userId = req.userId
+    const { username,title, description, media } = req.body
+    const reUploadMedia = req.file ? req.file.filename : media
+    try {
+        const updatePost = await posts.findByIdAndUpdate({ _id: id }, {
+            userId, username, title, description, media: reUploadMedia
+
+        }, { new: true })           // {new:true} for updation
+        await updatePost.save()      // to save changes in mongodb
+        res.status(200).json(updatePost)
+    } catch (err) {
+        res.status(401).json(err)
+    }
+
+}
