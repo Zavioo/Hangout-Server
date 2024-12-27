@@ -40,7 +40,7 @@ exports.editPostController = async (req, res) => {
     console.log("Inside editPostController");
     const id = req.params.id
     const userId = req.userId
-    const { username,title, description, media } = req.body
+    const { username, title, description, media } = req.body
     const reUploadMedia = req.file ? req.file.filename : media
     try {
         const updatePost = await posts.findByIdAndUpdate({ _id: id }, {
@@ -53,4 +53,16 @@ exports.editPostController = async (req, res) => {
         res.status(401).json(err)
     }
 
+}
+
+// remove post
+exports.removePostController = async (req, res) => {
+    console.log(("Inside removePostController"));
+    const { id } = req.params
+    try {
+        const deletePost = await posts.findByIdAndDelete({ _id: id })
+        res.status(200).json(deletePost)
+    } catch (err) {
+        res.status(401).json(err)
+    }
 }

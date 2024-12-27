@@ -23,7 +23,10 @@ router.post('/add-post', jwtMiddleware, multerMiddleware.single('media'), PostCo
 // to get all Posts: http://localhost:3000/all-posts
 router.get('/all-posts', PostController.allPostController)
 
-//post/10/edit :http://localhost:3000/posts/id/edit
+//to edit post - post/10/edit :http://localhost:3000/posts/id/edit
 router.put('/post/:id/edit', jwtMiddleware, multerMiddleware.single('media'), PostController.editPostController)
+
+//posts/id/remove :http://localhost:3000/projects/id/remove
+router.delete('/post/:id/remove',jwtMiddleware,PostController.removePostController)
 
 module.exports = router 
