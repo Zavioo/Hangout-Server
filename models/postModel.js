@@ -1,23 +1,27 @@
 const mongoose = require('mongoose');
+const {ObjectId} = mongoose.Schema.Types
 
 const postSchema = new mongoose.Schema({
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type:ObjectId,
         ref: 'users', // References the users schema
-        required: true,
+        required: true
     },
     username: {
-        type: String,
+        type: String
     },
     title: {
-        type: String,
+        type: String
     },
     description: {
-        type: String,
+        type: String
     },
     media: {
-        type: String,
+        type: String
     },
+    likes:{
+        type:Array
+    }
 });
 
 const posts = mongoose.model('posts', postSchema);

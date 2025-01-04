@@ -27,6 +27,8 @@ router.get('/all-posts', PostController.allPostController)
 router.put('/post/:id/edit', jwtMiddleware, multerMiddleware.single('media'), PostController.editPostController)
 
 //posts/id/remove :http://localhost:3000/projects/id/remove
-router.delete('/post/:id/remove',jwtMiddleware,PostController.removePostController)
+router.delete('/post/:id/remove', jwtMiddleware, PostController.removePostController)
+
+router.put('/post/:id/like', jwtMiddleware, PostController.updateLikesController)
 
 module.exports = router 

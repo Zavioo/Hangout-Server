@@ -25,7 +25,7 @@ exports.addPostController = async (req, res) => {
 
 // to get all posts 
 exports.allPostController = async (req, res) => {
-    console.log("Inside getAllPostController");
+    // console.log("Inside getAllPostController");
     try {
         const allPosts = await posts.find().populate('userId', 'profilePic'); // to get profilePic from users
         res.status(200).json(allPosts);
@@ -66,3 +66,48 @@ exports.removePostController = async (req, res) => {
         res.status(401).json(err)
     }
 }
+
+exports.updateLikesController = async (req, res) => {
+    console.log("Inside updateLikesController");
+    const { id } = req.params; // Post ID to update
+    const userId = req.userId; 
+    console.log("Current User Id" +userId);
+    
+    // User ID of the liker/unliker (assuming it's set by middleware)
+
+    try {
+        // Find the post and update the likes array
+        const post = await posts.findById(id);
+        if (!post) {
+            return res.status(404).json("Post Not Fount");
+        }else{
+            // Check if the user has already liked the post
+        const hasLiked = post.likes.includes(userId);
+
+        console.log(hasLiked);
+        
+
+        // Update the likes array
+        const updatedLikes = hasLiked
+            ? post.likes.filter((id) => id !== userId) // Remove like
+            : [...post.likes, userId]; // Add like
+        console.log(updatedLikes);
+        
+        // Save the updated post
+        const updatedPostLike = await posts.findByIdAndUpdate(
+            { _id: id },
+            { likes: updatedLikes },
+            { new: true } // Return the updated document
+        );
+        await updatedPostLike.save()
+        res.status(200).json(updatedPostLike)
+        }
+    
+    } catch (err) {
+        console.error("Error updating likes:", err.message);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
