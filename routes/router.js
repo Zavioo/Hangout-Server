@@ -26,9 +26,16 @@ router.get('/all-posts', PostController.allPostController)
 //to edit post - post/10/edit :http://localhost:3000/posts/id/edit
 router.put('/post/:id/edit', jwtMiddleware, multerMiddleware.single('media'), PostController.editPostController)
 
-//posts/id/remove :http://localhost:3000/projects/id/remove
+//posts/id/remove :http://localhost:3000/post/id/remove
 router.delete('/post/:id/remove', jwtMiddleware, PostController.removePostController)
 
+// to like post : http://localhost:3000/posts/id/like
 router.put('/post/:id/like', jwtMiddleware, PostController.updateLikesController)
+
+//to add comments : http://localhost:3000/posts/id/comments
+router.put('/post/:id/comments',jwtMiddleware,PostController.addCommentController)
+
+//to remove comments : http://localhost:3000/posts/id/removecomments
+router.delete('/post/:id/removecomments',PostController.removeCommentController)
 
 module.exports = router 
