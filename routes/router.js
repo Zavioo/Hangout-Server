@@ -38,4 +38,7 @@ router.put('/post/:id/comments',jwtMiddleware,PostController.addCommentControlle
 //to remove comments : http://localhost:3000/posts/id/removecomments
 router.delete('/post/:id/removecomments',PostController.removeCommentController)
 
+// to get a users posts  http://localhost:3000/getuserposts
+router.get('/getuserposts/:id',PostController.getUserPostsController)
+
 module.exports = router 

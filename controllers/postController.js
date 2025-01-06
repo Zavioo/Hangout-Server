@@ -27,7 +27,7 @@ exports.addPostController = async (req, res) => {
 exports.allPostController = async (req, res) => {
     // console.log("Inside getAllPostController");
     try {
-        const allPosts = await posts.find().populate('userId', 'profilePic'); // to get profilePic from users
+        const allPosts = await posts.find().populate('userId'); // to get profilePic from users
         res.status(200).json(allPosts);
     } catch (err) {
         console.error(err);
@@ -152,7 +152,7 @@ exports.removeCommentController = async (req, res) => {
         }
         // console.log("Current Comments:", post.comments);
         // Convert commentIdToRemove to ObjectId
-        const commentIdToRemove = new mongoose.Types.ObjectId(id); 
+        const commentIdToRemove = new mongoose.Types.ObjectId(id);
         // Filter out the comment to remove using .equals()
         const updatedComments = post.comments.filter(comment => !comment._id.equals(commentIdToRemove));
         // console.log("Updated Comments:", updatedComments);
@@ -165,5 +165,33 @@ exports.removeCommentController = async (req, res) => {
     } catch (error) {
         console.error("Error removing comment:", error);
         res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+exports.getUserPostsController = async (req, res) => {
+    console.log("Inside getUser PostsController");
+    
+    // Correctly extract userId from req.params
+    const  userId  = req.params; 
+    console.log("User  ID:", userId);
+    
+    try {
+        // Convert userId to ObjectId
+        const userObjectId = new mongoose.Types.ObjectId(userId);
+        
+        // Fetch posts for the user
+        const allUserPost = await posts.find({ userId: userObjectId });
+        
+        // Check if posts were found
+        if (allUserPost.length === 0) {
+            return res.status(404).json({ message: "No posts found for this user." });
+        }
+
+        res.status(200).json(allUserPost);
+        console.log(allUserPost);
+    } catch (err) {
+        console.error("Error fetching posts:", err);
+        res.status(500).json({ message: "Internal Server Error" }); // Change to 500 for server errors
     }
 };

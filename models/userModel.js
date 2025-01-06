@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     },
     about:{
         type:String,
-        default:"About You"
+        
     }
 
 })  
