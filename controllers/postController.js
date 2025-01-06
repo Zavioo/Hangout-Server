@@ -1,5 +1,5 @@
 const posts = require('../models/postModel')
-
+const mongoose = require('mongoose');
 // add post
 exports.addPostController = async (req, res) => {
     console.log("Inside addPostController");
@@ -37,7 +37,7 @@ exports.allPostController = async (req, res) => {
 
 //edit and update post
 exports.editPostController = async (req, res) => {
-    console.log("Inside editPostController");
+    // console.log("Inside editPostController");
     const id = req.params.id
     const userId = req.userId
     const { username, title, description, media } = req.body
@@ -57,7 +57,7 @@ exports.editPostController = async (req, res) => {
 
 // remove post
 exports.removePostController = async (req, res) => {
-    console.log(("Inside removePostController"));
+    // console.log(("Inside removePostController"));
     const { id } = req.params
     try {
         const deletePost = await posts.findByIdAndDelete({ _id: id })
@@ -71,7 +71,7 @@ exports.updateLikesController = async (req, res) => {
     console.log("Inside updateLikesController");
     const { id } = req.params; // Post ID to update
     const userId = req.userId;
-    console.log("Current User Id" + userId);
+    // console.log("Current User Id" + userId);
 
     // User ID of the liker/unliker (assuming it's set by middleware)
 
@@ -84,7 +84,7 @@ exports.updateLikesController = async (req, res) => {
             // Check if the user has already liked the post
             const hasLiked = post.likes.includes(userId);
 
-            console.log(hasLiked);
+            // console.log(hasLiked);
 
 
             // Update the likes array
@@ -116,7 +116,7 @@ exports.updateLikesController = async (req, res) => {
 exports.addCommentController = async (req, res) => {
     const { id } = req.params; // Get post ID from request parameters
     const { userId, comment, username, userProfilePic } = req.body; // Get user ID and comment from request body
-    console.log(id);
+    // console.log(id);
 
     try {
         // Find the post by ID
@@ -137,24 +137,33 @@ exports.addCommentController = async (req, res) => {
     }
 };
 
+// Function to remove a comment from a post
 exports.removeCommentController = async (req, res) => {
-    console.log("Inside removeCommentController ");
-    
-    const { id } = req.params
-    const { postId } = req.body
-    console.log(id, postId);
+    console.log("Inside removeCommentController");
+
+    const { id } = req.params; // This is the comment ID to remove
+    const { postId } = req.body; // This is the post ID
+    console.log("Comment ID:", id, "Post ID:", postId);
     try {
-
+        // Find the post by ID
         const post = await posts.findById(postId);
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+        // console.log("Current Comments:", post.comments);
+        // Convert commentIdToRemove to ObjectId
+        const commentIdToRemove = new mongoose.Types.ObjectId(id); 
+        // Filter out the comment to remove using .equals()
+        const updatedComments = post.comments.filter(comment => !comment._id.equals(commentIdToRemove));
+        // console.log("Updated Comments:", updatedComments);
 
-        console.log(post.comments);
-        
-        const commentIdToRemove = id
-        const updatedComments = post.comments.filter(comment => comment._id !== commentIdToRemove);
-        console.log("New" + updatedComments);
+        // Update the post's comments in the database
+        post.comments = updatedComments;
+        await post.save(); // Save the updated post
 
+        res.status(200).json({ message: "Comment removed successfully", updatedComments });
     } catch (error) {
-        console.error(error);
+        console.error("Error removing comment:", error);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
